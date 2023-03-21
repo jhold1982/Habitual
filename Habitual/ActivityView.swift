@@ -8,13 +8,32 @@
 import SwiftUI
 
 struct ActivityView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
+	@ObservedObject var data: Activities
+	var activity: Activity
+	var body: some View {
+		List {
+			Section {
+				if activity.description.isEmpty == false {
+					Text(activity.description)
+				}
+			}
+			Section {
+				Text("Completion count: \(activity.completionCount)")
+				Button("Mark as completed") {
+					var newActivity = activity
+					newActivity.completionCount += 1
+					if let index = data.activities.firstIndex(of: activity) {
+						data.activities[index] = newActivity
+					}
+				}
+			}
+		}
+		.navigationTitle(activity.title)
+	}
 }
 
 struct ActivityView_Previews: PreviewProvider {
-    static var previews: some View {
-        ActivityView()
-    }
+	static var previews: some View {
+		ActivityView(data: Activities(), activity: Activity.example)
+	}
 }
